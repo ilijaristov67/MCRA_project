@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
 <div class="container">
     <div id="userData" data-user-id="{{ $id }}"></div>
     <div class="row p-3">
@@ -11,7 +10,6 @@
                     <img id="profileImage" class="img-fluid rounded-pill" src="" alt="Profile picture of the user">
                 </div>
             </div>
-
             <div id="name" class="row align-items-center justify-content-center fw-bold mb-2"></div>
             <div class="row align-items-center text-center justify-content-center mb-2" id="city"> </div>
             <div class="row align-items-center justify-content-center mb-2 pb-3 border-bottom " id="country"></div>
@@ -40,9 +38,12 @@
                 </div>
             </div>
             <div id="reportUser">
-                <div class="row align-items-center text-center justify-content-center mb-2 " id="report"><button class="btn btn-danger w-25">Report User</button></div>
-            </div>
+                <div class="row align-items-center text-center justify-content-center mb-2 flex-column" id="report">
+                    <button type="button" class="btn btn-primary w-50 m-2" data-bs-toggle="modal" data-bs-target="#reccomendationModal">Reccomendation</button>
+                    <button id="addConnection" class="btn btn-info w-25 m-2 text-white ">Add Connection</button>
 
+                </div>
+            </div>
         </div>
         <div class="col-md-6 p-5">
             <div class="row">
@@ -51,10 +52,22 @@
                 </div>
                 <div id="biography" class="row mt-3"></div>
             </div>
-            <div id="reccomendations" class="row mt-5 p-2">
-                <h3>Препораки</h3>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam commodi expedita magnam similique animi distinctio eveniet facere! Corporis perferendis corrupti, nesciunt voluptas libero dolor? Libero eius debitis nobis consequatur iure doloribus fugiat sapiente ipsum ex veritatis nisi, dolores sunt tempora, commodi eum, porro dicta. Impedit aliquam tenetur ducimus velit error assumenda beatae earum iure laudantium blanditiis consectetur commodi sunt eos adipisci excepturi, eius repudiandae. Tempore soluta distinctio quod quos repellendus necessitatibus ab perferendis nulla? Illo, minima. Voluptatem libero id dicta impedit odit similique amet eum quas autem at! Assumenda debitis placeat recusandae est, vitae at officiis fugiat in itaque aliquid.
+            <div id="unApprovedReccomendations" class="row mt-5 p-2">
+                <h3>Неодобрени Препораки</h3>
             </div>
+            <div id="reccomendations" class="row mt-5 p-2">
+                <h3 id="reccomendationTitle">Препораки</h3>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="connections row d-flex justify-content-between">
+        <div id="pendingConnections" class="col-md-5 text-center ">
+            <h5>Pending Requests</h5>
+        </div>
+        <div id="acceptedConnections" class="col-md-5 text-center d-flex">
+            <h5>Connections</h5>
         </div>
     </div>
 </div>
@@ -168,6 +181,71 @@
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="reccomendationModal" tabindex="-1" aria-labelledby="reccomendationModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="reccomendationModalLabel">Give reccomendation</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="reccomendationForm">
+                    <input id="user" type="hidden" value="{{ Auth::id() }}">
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a reccomendation here" name="reccomendation" id="reccomendation" style="height: 100px"></textarea>
+                        <label for="reccomendation">Reccomendation...</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                    <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editReccomendationModal" tabindex="-1" aria-labelledby="editReccomendationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editReccomendationModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editReccomendationForm">
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a reccomendation here" name="editReccomendation" id="editReccomendation" style="height: 100px"></textarea>
+                        <label for="editReccomendation">Reccomendation...</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                    <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="reportForm">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportModalLabel">Report Content</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="reportable_id" id="reportable_id">
+                    <input type="hidden" name="reportable_type" id="reportable_type">
+                    <div class="mb-3">
+                        <label for="reportReason" class="form-label">Reason for Reporting</label>
+                        <textarea class="form-control" name="reason" id="reportReason" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Submit Report</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -314,6 +392,396 @@
                 console.error('AJAX error:', err);
             }
         });
+
+        function getReccomendation() {
+            $.ajax({
+                url: `http://127.0.0.1:8000/api/getReccomendations/${id}`,
+                type: 'get',
+                success: function(response) {
+                    let reccomendations = response.data;
+                    populateReccomendations(reccomendations)
+
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        }
+        $('#reccomendationForm').off('submit').on('submit', function(e) {
+            e.preventDefault()
+            $('#reccomendationModal').modal('hide');
+            let reccomendedUserId = id;
+            let userReccomending = $('#user').val();
+            let reccomendation = $('#reccomendation').val();
+            $.ajax({
+                url: 'http://127.0.0.1:8000/api/saveReccomendation',
+                type: 'post',
+                data: {
+                    reccomendation: reccomendation,
+                    user_id: reccomendedUserId,
+                    reccomended_by: userReccomending
+                },
+                success: function(response) {
+                    console.log(response)
+                    Swal.fire({
+                        title: "Good job!",
+                        text: response.message,
+                        icon: "success"
+
+                    })
+                    $('#reccomendation').val('')
+                    $('#reccomendations').empty()
+                    getReccomendation()
+                },
+                error: function(err) {
+                    console.log(err)
+                }
+            })
+        })
+        $('#unApprovedReccomendations').hide();
+        if (Number(id) === currentUser || currentUser === 1) {
+            $('#unApprovedReccomendations').show();
+        }
+
+        function populateReccomendations(reccomendations) {
+            reccomendations.forEach(reccomendation => {
+                let title = reccomendation.reccomender.title === null ? 'No title to display' : reccomendation.reccomender.title;
+
+                if (reccomendation.is_approved === 1) {
+                    const reccomendationDiv = $(`
+
+
+            <div class="border rounded-3 m-2 p-3 shadow-lg" style="overflow-wrap: break-word; width: 100%;">
+                <h5 class="reccomendation-heading">Recommendation by ${reccomendation.reccomender.name}</h5>
+                <p>${reccomendation.reccomendation}</p>
+                <div class="d-flex justify-content-end flex-column align-items-end">
+                    <p class="fst-italic text-muted">By: ${reccomendation.reccomender.name} ${reccomendation.reccomender.surname}</p>
+                    <p class="fst-italic text-muted">Title: ${title}</p>
+                    <div class="reccomendationBtns"></div>
+                </div>
+            </div>
+            `);
+
+                    $('#reccomendations').append(reccomendationDiv);
+                    if (currentUser != id) {
+                        let reportReccomendationBtn = `<button class="w-25 m-2 m-auto btn btn-sm btn-danger reportReccomendationButton" data-id="${reccomendation.id}" data-type="App\\Models\\Reccomendation">Report</button>`;
+                        reccomendationDiv.find('.reccomendationBtns').append(reportReccomendationBtn);
+                    }
+
+                    if (currentUser === reccomendation.reccomended_by || currentUser === 1) {
+                        let editButton = $(`<button data-reccomendation-id=${reccomendation.id} class="editBtn btn btn-warning">Edit Reccomendation</button>`);
+                        reccomendationDiv.find('.reccomendationBtns').append(editButton);
+                    }
+
+                    if (currentUser === reccomendation.reccomended_by || currentUser === 1 || Number(id) === currentUser) {
+                        let deleteButton = $(`<button data-reccomendation-id=${reccomendation.id} class="btn btn-danger delete m-1">Delete</button>`);
+                        reccomendationDiv.find('.reccomendationBtns').append(deleteButton);
+                    }
+                } else if (reccomendation.is_approved != 1) {
+                    const unApprovedReccomendation = $(`
+
+            <!-- Add heading for unapproved recommendations as well -->
+            <div data-reccomendationDiv-id=${reccomendation.id} class="border rounded-3 m-2 p-3 shadow-lg" style="overflow-wrap: break-word; width: 100%;">
+                <h5 class="unapproved-heading">Unapproved Recommendation by ${reccomendation.reccomender.name}</h5>
+                <p>${reccomendation.reccomendation}</p>
+                <div class="d-flex justify-content-end flex-column align-items-end">
+                    <p class="fst-italic text-muted">By: ${reccomendation.reccomender.name} ${reccomendation.reccomender.surname}</p>
+                    <p class="fst-italic text-muted">Title: ${title}</p>
+                    <div class="reccomendationBtns"></div>
+                    <button data-reccomendation-id=${reccomendation.id} class="btn btn-success approve m-1">Approve</button>
+                    <button data-reccomendation-id=${reccomendation.id} class="btn btn-danger delete m-1">Delete</button>
+                </div>
+            </div>
+            `);
+
+                    $('#unApprovedReccomendations').append(unApprovedReccomendation);
+
+                    if (currentUser != id) {
+                        let reportUnapprovedRecBtn = `<button class="w-100 m-2 m-auto btn btn-sm btn-danger reportReccomendationButton" data-id="${reccomendation.id}" data-type="App\\Models\\Reccomendation">Report</button>`;
+                        unApprovedReccomendation.find('.reccomendationBtns').append(reportUnapprovedRecBtn);
+                    }
+                }
+            });
+        }
+
+        let reportUserBtn = `<button class="w-25 m-2 m-auto btn btn-sm btn-danger reportUserButton" data-id="${id}" data-type="App\\Models\\User">Report</button>`
+
+        $('#report').append(reportUserBtn)
+
+        $(document).on('click', '.reportUserButton', function() {
+            let reportableId = $(this).data('id');
+            let reportableType = $(this).data('type');
+            $('#reportable_id').val(reportableId);
+            $('#reportable_type').val(reportableType);
+            $('#reportModal').modal('show');
+        });
+
+        $(document).on('click', '.reportReccomendationButton', function() {
+            let reportableId = $(this).data('id');
+            let reportableType = $(this).data('type');
+            $('#reportable_id').val(reportableId);
+            $('#reportable_type').val(reportableType);
+            $('#reportModal').modal('show');
+        });
+
+        $.get('/sanctum/csrf-cookie').then(() => {
+            $('#reportForm').on('submit', function(e) {
+                e.preventDefault();
+                let formData = $(this).serialize();
+                $.ajax({
+                    url: '/api/report',
+                    method: 'POST',
+                    data: formData,
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Report Submitted",
+                            text: response.message,
+                        });
+                        $('#reportModal').modal('hide');
+                        $('#reportForm')[0].reset();
+                    },
+                    error: function(xhr) {
+                        let errorMessage = xhr.responseJSON.message || 'An error occurred.';
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: errorMessage,
+                        });
+                    }
+                });
+            });
+        });
+
+
+        $(document).on('click', '.editBtn', function(e) {
+            let reccomendationId = $(this).data('reccomendation-id');
+            $('#editReccomendationModal').modal('show');
+            $.ajax({
+                url: `http://127.0.0.1:8000/api/getReccomendation/${reccomendationId}`,
+                type: 'get',
+                success: function(response) {
+                    let currentReccomendation = response.data.reccomendation;
+                    $('#editReccomendation').val(currentReccomendation);
+                    $('#editReccomendationForm').off('submit').on('submit', function(e) {
+                        e.preventDefault();
+                        let updateReccomendation = $('#editReccomendation').val();
+                        $.ajax({
+                            url: `http://127.0.0.1:8000/api/updateReccomendation/${reccomendationId}`,
+                            type: 'PUT',
+                            data: {
+                                reccomendation: updateReccomendation
+                            },
+                            success: function(response) {
+                                console.log(response.message);
+                                $('#editReccomendationModal').modal('hide');
+                                Swal.fire({
+                                    icon: 'success',
+                                    text: response.message
+                                })
+                                $('#reccomendations').empty();
+                                $('#unApprovedReccomendations').empty();
+                                getReccomendation()
+                            },
+                            error: function(err) {
+                                console.log(err);
+                            }
+                        });
+                    });
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        });
+
+        $(document).on('click', '.approve', function(e) {
+            let reccomendationId = $(this).data('reccomendation-id');
+            $.ajax({
+                url: `http://127.0.0.1:8000/api/approveReccomendation/${reccomendationId}`,
+                type: 'post',
+                success: function(response) {
+                    $(`[data-reccomendationDiv-id="${reccomendationId}"]`).remove();
+                    $('#reccomendations').empty()
+                    getReccomendation()
+                },
+                error: function(err) {
+                    console.log(err)
+                }
+            })
+        })
+        $(document).on('click', '.delete', function() {
+            let reccomendationId = $(this).data('reccomendation-id');
+            Swal.fire({
+                icon: 'question',
+                title: 'Are you sure you want to delete this reccomendetion?',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel',
+                showCloseButton: true,
+                focusConfirm: false,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `http://127.0.0.1:8000/api/deleteReccomendation/${reccomendationId}`,
+                        type: 'post',
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Reccomenation Deleted',
+                                text: response.message,
+                            })
+                            $(`[data-reccomendationDiv-id="${reccomendationId}"]`).remove();
+                            $('#reccomendations').empty()
+                            getReccomendation()
+                        },
+                        error: function(err) {
+                            console.log(err)
+                        }
+                    })
+                }
+            })
+
+        })
+        $('#reccomendations').empty()
+        getReccomendation()
+        $('#addConnection').on('click', function() {
+            let connectionReceiverId = Number(id);
+            let connectionSenderId = currentUser;
+            $.ajax({
+                url: 'http://127.0.0.1:8000/api/sendConnection',
+                type: 'post',
+                data: {
+                    sender_id: connectionSenderId,
+                    received_id: connectionReceiverId,
+                },
+                success: function(response) {
+                    if (response.success === true) {
+                        $('#pendingConnections').empty()
+                        getConnections(id)
+                        Swal.fire({
+                            icon: 'success',
+                            text: response.message
+                        })
+                    } else if (response.success === false) {
+                        Swal.fire({
+                            icon: 'error',
+                            text: response.message
+                        })
+                    }
+                },
+                error: function(err) {
+                    console.log(err)
+
+                }
+            })
+        })
+
+        function getConnections(id) {
+            $.ajax({
+                url: `http://127.0.0.1:8000/api/getConnections/${id}`,
+                type: 'get',
+                success: function(response) {
+                    let connections = response.data;
+                    $('#pendingConnections').empty();
+                    $('#acceptedConnections').empty();
+                    console.log(response.data)
+                    connections.forEach(connection => {
+                        let sender = connection.sender;
+                        if (connection.status === 'pending') {
+                            let pendingConnection = $(`
+                        <div class="card p-2 m-2" style="width: 300px;">
+                            <h5>Connection request</h5>
+                            <img src="${window.location.origin}/${sender.img_path}" class="card-img-top rounded-circle mx-auto d-block" alt="Connection Sender" style="width: 150px; height: 150px; object-fit: cover;">
+                            <div class="card-body">
+                                <p class="card-text">Sender name: ${sender.name} ${sender.surname}</p>
+                                <p class="card-text">Sender email: ${sender.email}</p>
+                                <p class="card-text"><a href="http://127.0.0.1:8000/user/${sender.id}">Visit their profile</a></p>
+                                <div>
+                                    <button class="btn btn-success m-2 acceptConnectionBtn" data-connection-id="${connection.id}">Accept connection</button> 
+                                    <button class="btn btn-danger m-2 deleteConnectionBtn" data-connection-id="${connection.id}">Delete connection</button> 
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                            $('#pendingConnections').append(pendingConnection);
+
+                        } else if (connection.status === 'accepted') {
+                            let acceptedConnection = $(`
+                        <div class="card p-2 m-2" style="width: 18rem;">
+                            <h5>Connection</h5>
+                            <img src="${window.location.origin}/${sender.img_path}" class="card-img-top rounded-circle mx-auto d-block" alt="Connection Sender" style="width: 150px; height: 150px; object-fit: cover;">
+                            <div class="card-body">
+                                <p class="card-text">Sender name: ${sender.name} ${sender.surname}</p>
+                                <p class="card-text">Sender email: ${sender.email}</p>
+                                <p class="card-text"><a href="http://127.0.0.1:8000/user/${sender.id}">Visit their profile</a></p>
+                                <div class="deleteBtnDiv"></div>
+                            </div>
+                        </div>
+                    `);
+                            let deleteBtn = $(`<button class="btn btn-danger m-2 deleteConnectionBtn" data-connection-id="${connection.id}">Delete connection</button>`);
+
+                            $('#acceptedConnections').append(acceptedConnection);
+
+                            if (currentUser === Number(id) || currentUser === 1) {
+                                acceptedConnection.find('.deleteBtnDiv').append(deleteBtn);
+                            }
+                        }
+                    });
+
+
+                    $(document).on('click', '.acceptConnectionBtn', function() {
+                        let connectionId = $(this).data('connection-id');
+                        $.ajax({
+                            url: `http://127.0.0.1:8000/api/acceptConnection/${connectionId}`,
+                            type: 'post',
+                            success: function(response) {
+                                console.log(response);
+                                $('#pendingConnections').empty()
+                                getConnections(id)
+                            },
+                            error: function(err) {
+                                console.log(err);
+                            }
+                        });
+                    });
+
+                    $(document).on('click', '.deleteConnectionBtn', function() {
+                        let connectionId = $(this).data('connection-id');
+                        $.ajax({
+                            url: `http://127.0.0.1:8000/api/deleteConnection/${connectionId}`,
+                            type: 'post',
+                            success: function(response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    text: response.message
+                                })
+                                $('#pendingConnections').empty()
+                                $('#acceptedConnections').empty()
+                                getConnections(id)
+                            },
+                            error: function(err) {
+                                console.log(err);
+                            }
+                        });
+                    });
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        }
+
+        if (currentUser === Number(id) || currentUser === 1) {
+            $('#pendingConnections').show();
+        } else {
+            $('#pendingConnections').hide();
+        }
+        $('#pendingConnections').empty()
+        getConnections(id)
     });
 </script>
 

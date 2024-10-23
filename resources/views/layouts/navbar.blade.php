@@ -7,8 +7,21 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+
             @if (Route::has('login'))
             <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="{{ route('users.allUsers')}}" class="nav-link text-decoration-none">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('employees.allEmployees')}}" class="nav-link text-decoration-none">Employees</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('events.allEvents')}}" class="nav-link text-decoration-none">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('blogs.allBlogs')}}" class="nav-link text-decoration-none">Blogs</a>
+                </li>
                 @auth
                 <li class="nav-item">
                     <a href="{{ route('user.show', [ 'id' => Auth::id()]) }}" class="nav-link text-decoration-none">Profile</a>
@@ -27,6 +40,7 @@
                 </li>
 
                 @else
+
                 <li class="nav-item">
                     <a href="{{ route('login') }}" class="nav-link">Log in</a>
                 </li>
@@ -36,6 +50,7 @@
                 </li>
                 @endif
                 @endauth
+
             </ul>
             @endif
         </div>
