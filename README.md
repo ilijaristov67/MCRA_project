@@ -12,4 +12,8 @@
 
 # Start the application with php artisan serve
 
-# For email testing, you can configure Mailtrap by setting the mail configuration in the .env file. You will need to sign up for a Mailtrap account and then update the relevant fields in the .env:
+# For roles you can run the command php artisan db:seed --class=RoleSeeded (this is not a typo, it is seeded by mistake in the code and I did not have time to chagne it)
+
+# To add your admin user run the command artisan db:seed --class=UserSeeder
+
+# These are the only seeders to run, everything else is uploadable and confiugurable on the web app, only excetpion is that I did not finish the conferneces on time

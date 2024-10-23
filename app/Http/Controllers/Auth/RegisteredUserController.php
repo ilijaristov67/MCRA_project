@@ -87,6 +87,9 @@ class RegisteredUserController extends Controller
             $imagePath = request()->file('image')->move(public_path('images/' . $user->id), $imageName);
             $user->img_path = 'images/' . $user->id . '/' . $imageName;
             $user->save();
+        } else {
+            $user->img_path = 'standardImage/' . 'images.png';
+            $user->save();
         }
 
 

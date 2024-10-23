@@ -66,7 +66,6 @@ class UserController extends Controller
     public function getAllUsers(Request $request)
     {
         $users = User::where('is_deleted', 0)->paginate(10);
-
         return UserResource::collection($users);
     }
 
@@ -92,5 +91,20 @@ class UserController extends Controller
                 'message' => 'User not found.'
             ], 404);
         }
+    }
+
+    public function toggleBan($id)
+    {
+        $user = User::findOrFail($id);
+
+        $user->is_banned = !$user->is_banned;
+        $user->save();
+
+        $status = $user->is_banned ? "User Banned" : "User Unbanned";
+
+        return response()->json([
+            'success' => true,
+            'message' => $status
+        ]);
     }
 }

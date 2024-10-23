@@ -26,7 +26,7 @@ class BlogRequest extends FormRequest
             'main_content' => 'required|min:10',
             'user_id' => 'required|exists:users,id',
             'category_id' => 'required'
-            //napravi i za imeto
+
         ];
     }
 }

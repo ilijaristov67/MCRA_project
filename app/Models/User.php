@@ -29,7 +29,6 @@ class User extends Authenticatable
         'photo',
         'role_id',
         'title'
-
     ];
 
     /**
@@ -64,5 +63,30 @@ class User extends Authenticatable
     public function likes()
     {
         return $this->hasMany(Like::class);
+    }
+
+    public function receivedReccomendations()
+    {
+
+        return $this->hasMany(Reccomendation::class, 'user_id');
+    }
+    public function givenRecommendations()
+    {
+        return $this->hasMany(Reccomendation::class, 'recommended_by');
+    }
+
+    public function sentConnections()
+    {
+        return $this->hasMany(Connection::class, 'sender_id');
+    }
+    public function receivedConnections()
+    {
+
+        return $this->hasMany(Connection::class, 'received_id');
+    }
+
+    public function reports()
+    {
+        return $this->morphMany(Report::class, 'reportable');
     }
 }

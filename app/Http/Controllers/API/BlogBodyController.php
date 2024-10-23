@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\BlogBody;
 use App\Http\Requests\BlogBodyRequest;
+use App\Http\Resources\BlogBodyResource;
 
 class BlogBodyController extends Controller
 {
@@ -26,5 +27,34 @@ class BlogBodyController extends Controller
             'success' => true,
             'message' => 'Blog content created successfuly',
         ]);
+    }
+
+    public function show($id)
+    {
+        $blogBody = BlogBody::where('blog_id', $id)->get();
+        return BlogBodyResource::collection($blogBody);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $blogBody = BlogBody::where('blog_id', $id)->get();
+
+        foreach ($request->input('subtitle') as $index => $subtitle) {
+
+            if (isset($blogBody[$index])) {
+
+                $subsection = $blogBody[$index];
+                $subsection->subtitle = $subtitle;
+                $subsection->sub_content = $request->input('sub_content')[$index];
+                $subsection->save();
+            } else {
+                BlogBody::create([
+                    'blog_id' => $id,
+                    'subtitle' => $subtitle,
+                    'sub_content' => $request->input('sub_content')[$index],
+                ]);
+            }
+        }
+        return response()->json(['message' => 'Blog body updated successfully!']);
     }
 }
